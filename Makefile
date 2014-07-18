@@ -8,7 +8,7 @@ min:
 	--comments \
 	--stats
 bundle:
-	browserify -r ./index.js:Preach -o browser/preach.js
+	./node_modules/.bin/browserify -r ./index.js:Preach -o browser/preach.js
 watch:
 	watchify index.js src/preach.js -o browser/preach.js
 build: test bundle min
