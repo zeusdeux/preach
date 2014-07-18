@@ -1,0 +1,18 @@
+{
+  "name": "preach",
+  "version": "0.0.1",
+  "description": "Lightweight pubsub utility",
+  "main": "index.js",
+  "keywords": [
+    "pubsub",
+    "publish",
+    "subscribe",
+    "browser"
+  ],
+  "author": "Mudit Ameta",
+  "license": "MIT",
+  "devDependencies": {
+    "should": "^4.0.4",
+    "sinon": "^1.10.3"
+  }
+}
