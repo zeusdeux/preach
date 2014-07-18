@@ -39,12 +39,12 @@ You can then do:
 
 - [Preach.pub(channel, [data], [data], [...])](#preachpubchannel-data-data-)
 - [Preach.sub(channel, subscriber)](#preachsubchannel-subscriber)
-- [Preach.unsub(channel, subscriber)](#unsub)
-- [Preach.purge()](#purge)
-- [Preach.channels()](#channels)
-- [Preach.subscribers(channel)](#subscribers)
-- [Preach.subscriberCount(channel)](#subscribercount)
-- [Preach.setMaxSubscribers(n)](#setmaxsubscribers)
+- [Preach.unsub(channel, subscriber)](#preachunsubchannel-subscriber)
+- [Preach.purge()](#preachpurge)
+- [Preach.channels()](#preachchannels)
+- [Preach.subscribers(channel)](#preachsubscriberschannel)
+- [Preach.subscriberCount(channel)](#preachsubscribercountchannel)
+- [Preach.setMaxSubscribers(n)](#preachsetmaxsubscribersn)
 
 ## Preach.pub(channel, [data], [data], [...])
 

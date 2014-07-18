@@ -288,4 +288,11 @@ describe('Preach', function() {
       });
     });
   });
+  describe('#setMaxSubscribers', function() {
+    describe('when n is less than 0', function() {
+      it('should throw', function() {
+        Preach.setMaxSubscribers.bind(Preach, -1).should.throw();
+      });
+    });
+  });
 });
