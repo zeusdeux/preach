@@ -1,4 +1,4 @@
 preach
 ======
 
-Lightweight pubsub utility
+Preach is a lightweight pubsub utility for node and the browser.

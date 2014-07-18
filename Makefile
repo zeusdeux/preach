@@ -1,7 +1,7 @@
 test:
-	mocha -r should
+	./node_modules/.bin/mocha -r should
 min:
-	uglifyjs browser/preach.js \
+	./node_modules/.bin/uglifyjs browser/preach.js \
 	-o browser/preach.min.js \
 	-c -m \
 	--source-map browser/preach.min.map \
