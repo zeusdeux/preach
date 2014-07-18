@@ -316,21 +316,22 @@ module.exports={
 
 },{}],5:[function(require,module,exports){
 var EventEmitter = require('events').EventEmitter;
-var util = require('./util');
-var errors = require('./errors');
+var util         = require('./util');
+var errors       = require('./errors');
 
-var emitter = new EventEmitter;
-var Preach = {};
+var emitter      = new EventEmitter;
+var Preach       = {};
+
+//_q.channel     = { fnIndex: fn, ...}
+Preach._q        = {};
 
 //unlimited listeners per event
 emitter.setMaxListeners(0);
 
-//_q.channel = { fnIndex: fn, ...}
-Preach._q = {};
 
 Preach.pub = function(channel) {
   var channels = util.getChannels(channel, Preach._q);
-  var data = [].splice.call(arguments, 1);
+  var data     = [].splice.call(arguments, 1);
   if (!channels.length || (channels.length === 1 && !(channels[0] in Preach._q))) throw new Error(errors.ECHNLNOTFOUND);
   for (var i in channels) {
     emitter.emit.apply(emitter, [channels[i]].concat(data));
@@ -340,7 +341,7 @@ Preach.pub = function(channel) {
 
 Preach.sub = function(channel, fn) {
   var channels = util.getChannels(channel, Preach._q);
-  var fnIndex = util.getFnIdx(fn);
+  var fnIndex  = util.getFnIdx(fn);
   var curr;
   if (!channels.length) throw new Error(errors.ECHNLNOTFOUND);
   for (var i in channels) {
@@ -354,7 +355,7 @@ Preach.sub = function(channel, fn) {
 
 Preach.unsub = function(channel, fn) {
   var channels = util.getChannels(channel, Preach._q);
-  var fnIndex = util.getFnIdx(fn);
+  var fnIndex  = util.getFnIdx(fn);
   var curr;
   if (!channels.length || (channels.length === 1 && !(channels[0] in Preach._q))) throw new Error(errors.ECHNLNOTFOUND);
   for (var i in channels) {
