@@ -1,20 +1,34 @@
-(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module '"+o+"'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
-var Preach = module.exports = require('./src/preach');
-if (typeof window !== 'undefined') window.Preach = Preach;
-},{"./src/preach":2}],2:[function(require,module,exports){
+require=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module '"+o+"'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({"Focm2+":[function(require,module,exports){
+module.exports = require('./src/preach');
+
+},{"./src/preach":4}],"Preach":[function(require,module,exports){
+module.exports=require('Focm2+');
+},{}],3:[function(require,module,exports){
+module.exports={
+  "ECHNLNOTFOUND": "Preach: No channels match the given channel name or regular expression",
+  "ELSTNRNOTFOUND": "Preach: Could not unsubscribe. Maybe the subsciber doesn't exist"
+}
+
+},{}],4:[function(require,module,exports){
 var EventEmitter = require('events').EventEmitter;
 var util = require('./util');
+var errors = require('./errors');
 
 var emitter = new EventEmitter;
 var Preach = {};
 
+//unlimited listeners per event
+emitter.setMaxListeners(0);
+
+//_q.channel = { fnIndex: fn, ...}
 Preach._q = {};
 
-Preach.pub = function(channel, data) {
+Preach.pub = function(channel) {
   var channels = util.getChannels(channel, Preach._q);
-  if (!channels.length) throw new Error('Preach: No channels match the given regular expression');
+  var data = [].splice.call(arguments, 1);
+  if (!channels.length || (channels.length === 1 && !(channels[0] in Preach._q))) throw new Error(errors.ECHNLNOTFOUND);
   for (var i in channels) {
-    emitter.emit(channels[i], data);
+    emitter.emit.apply(emitter, [channels[i]].concat(data));
   }
   return true;
 };
@@ -23,7 +37,7 @@ Preach.sub = function(channel, fn) {
   var channels = util.getChannels(channel, Preach._q);
   var fnIndex = util.getFnIdx(fn);
   var curr;
-  if (!channels.length) throw new Error('Preach: No channels match the given regular expression');
+  if (!channels.length) throw new Error(errors.ECHNLNOTFOUND);
   for (var i in channels) {
     curr = channels[i];
     Preach._q[curr] = Preach._q[curr] || {};
@@ -37,16 +51,16 @@ Preach.unsub = function(channel, fn) {
   var channels = util.getChannels(channel, Preach._q);
   var fnIndex = util.getFnIdx(fn);
   var curr;
-  if (!channels.length) throw new Error('Preach: No channels match the given regular expression');
+  if (!channels.length || (channels.length === 1 && !(channels[0] in Preach._q))) throw new Error(errors.ECHNLNOTFOUND);
   for (var i in channels) {
-    curr = channels[i];
     try {
+      curr = channels[i];
       emitter.removeListener(curr, Preach._q[curr][fnIndex]);
+      delete Preach._q[curr][fnIndex];
     }
     catch (e) {
-      throw new Error('Preach: Could not unsubscribe. Maybe the subsciber doesn\'t exist.', e);
+      throw new Error(errors.ELSTNRNOTFOUND, e);
     }
-    delete Preach._q[curr][fnIndex];
   }
   return true;
 };
@@ -69,17 +83,41 @@ Preach.channels = function() {
 Preach.subscribers = function(channel) {
   var channels = util.getChannels(channel || /.*/, Preach._q);
   var curr;
-  var result = {};
+  var result;
+  result = {};
+  if (channels.length === 1 && !(channels[0] in Preach._q)) return result;
   for (var i in channels) {
     curr = channels[i];
-    result[curr] = Preach._q[curr];
+    result[curr] = [];
+    for (var k in Preach._q[curr]) {
+      if (Preach._q[curr].hasOwnProperty(k)) {
+        result[curr].push(Preach._q[curr][k]);
+      }
+    }
   }
   return result;
 };
 
+Preach.subscriberCount = function(channel) {
+  var channels = util.getChannels(channel || /.*/, Preach._q);
+  var curr;
+  var result;
+  result = {};
+  if (channels.length === 1 && !(channels[0] in Preach._q)) return result;
+  for (var i in channels) {
+    curr = channels[i];
+    result[curr] = EventEmitter.listenerCount(emitter, curr);
+  }
+  return result;
+};
+
+Preach.setMaxSubscribers = function(n) {
+  emitter.setMaxListeners(n);
+};
+
 module.exports = Preach;
 
-},{"./util":3,"events":4}],3:[function(require,module,exports){
+},{"./errors":3,"./util":5,"events":6}],5:[function(require,module,exports){
 exports.getFnIdx = function(fn) {
   return fn.toString().replace(/[\s\r\n\f\t\v]/g, '');
 };
@@ -98,7 +136,7 @@ exports.getChannels = function(expr, obj) {
   return channels;
 };
 
-},{}],4:[function(require,module,exports){
+},{}],6:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -403,4 +441,4 @@ function isUndefined(arg) {
   return arg === void 0;
 }
 
-},{}]},{},[1])
+},{}]},{},[])

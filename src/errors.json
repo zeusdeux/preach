@@ -1,0 +1,4 @@
+{
+  "ECHNLNOTFOUND": "Preach: No channels match the given channel name or regular expression",
+  "ELSTNRNOTFOUND": "Preach: Could not unsubscribe. Maybe the subsciber doesn't exist"
+}
