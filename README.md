@@ -38,9 +38,9 @@ You can then do:
 
 ## Changelog
 
-- [0.2.0](#020)
+- 0.2.0
   - `Preach` now exports a constructor when `require`-ed instead of a monolithic instance (incompatible change)
-- [0.1.0](#010)
+- 0.1.0
   - Initial version
 
 ## API
