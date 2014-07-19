@@ -2,7 +2,8 @@ preach
 ======
 [![Build Status](https://travis-ci.org/zeusdeux/preach.svg?branch=master)](https://travis-ci.org/zeusdeux/preach)
 
-Preach is a lightweight pubsub utility for node and the browser.
+Preach is a lightweight pubsub utility for node and the browser.   
+The browser version is ~2kb gzipped.
 
 ## Installation
 
