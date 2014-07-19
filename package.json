@@ -1,6 +1,6 @@
 {
   "name": "preach",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Lightweight pubsub utility for node and the browser",
   "main": "index.js",
   "keywords": [

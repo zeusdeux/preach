@@ -2,50 +2,52 @@ var EventEmitter = require('events').EventEmitter;
 var util         = require('./util');
 var errors       = require('./errors');
 
-var emitter      = new EventEmitter;
-var Preach       = {};
+function Preach(n) {
+  //fix a faulty call to the constructor
+  if (!(this instanceof Preach)) return new Preach;
 
-//_q.channel     = { fnIndex: fn, ...}
-Preach._q        = {};
+  //_q.channel     = { fnIndex: fn, ...}
+  this._q = {};
+  this._e = new EventEmitter;
 
-//unlimited listeners per event
-emitter.setMaxListeners(0);
+  //unlimited listeners per event
+  this._e.setMaxListeners(n || 0);
+}
 
-
-Preach.pub = function(channel) {
-  var channels = util.getChannels(channel, Preach._q);
+Preach.prototype.pub = function(channel) {
+  var channels = util.getChannels(channel, this._q);
   var data     = [].splice.call(arguments, 1);
-  if (!channels.length || (channels.length === 1 && !(channels[0] in Preach._q))) throw new Error(errors.ECHNLNOTFOUND);
+  if (!channels.length || (channels.length === 1 && !(channels[0] in this._q))) throw new Error(errors.ECHNLNOTFOUND);
   for (var i in channels) {
-    emitter.emit.apply(emitter, [channels[i]].concat(data));
+    this._e.emit.apply(this._e, [channels[i]].concat(data));
   }
   return true;
 };
 
-Preach.sub = function(channel, fn) {
-  var channels = util.getChannels(channel, Preach._q);
+Preach.prototype.sub = function(channel, fn) {
+  var channels = util.getChannels(channel, this._q);
   var fnIndex  = util.getFnIdx(fn);
   var curr;
   if (!channels.length) throw new Error(errors.ECHNLNOTFOUND);
   for (var i in channels) {
     curr = channels[i];
-    Preach._q[curr] = Preach._q[curr] || {};
-    Preach._q[curr][fnIndex] = fn;
-    emitter.on(curr, Preach._q[curr][fnIndex]);
+    this._q[curr] = this._q[curr] || {};
+    this._q[curr][fnIndex] = fn;
+    this._e.on(curr, this._q[curr][fnIndex]);
   }
   return true;
 };
 
-Preach.unsub = function(channel, fn) {
-  var channels = util.getChannels(channel, Preach._q);
+Preach.prototype.unsub = function(channel, fn) {
+  var channels = util.getChannels(channel, this._q);
   var fnIndex  = util.getFnIdx(fn);
   var curr;
-  if (!channels.length || (channels.length === 1 && !(channels[0] in Preach._q))) throw new Error(errors.ECHNLNOTFOUND);
+  if (!channels.length || (channels.length === 1 && !(channels[0] in this._q))) throw new Error(errors.ECHNLNOTFOUND);
   for (var i in channels) {
     try {
       curr = channels[i];
-      emitter.removeListener(curr, Preach._q[curr][fnIndex]);
-      delete Preach._q[curr][fnIndex];
+      this._e.removeListener(curr, this._q[curr][fnIndex]);
+      delete this._q[curr][fnIndex];
     }
     catch (e) {
       throw new Error(errors.ELSTNRNOTFOUND, e);
@@ -54,54 +56,54 @@ Preach.unsub = function(channel, fn) {
   return true;
 };
 
-Preach.purge = function() {
-  var channels = util.getChannels(/.*/, Preach._q);
+Preach.prototype.purge = function() {
+  var channels = util.getChannels(/.*/, this._q);
   var curr;
   for (var i in channels) {
     curr = channels[i];
-    emitter.removeAllListeners(curr);
-    delete Preach._q[curr];
+    this._e.removeAllListeners(curr);
+    delete this._q[curr];
   }
   return true;
 };
 
-Preach.channels = function() {
-  return util.getChannels(/.*/, Preach._q);
+Preach.prototype.channels = function() {
+  return util.getChannels(/.*/, this._q);
 };
 
-Preach.subscribers = function(channel) {
-  var channels = util.getChannels(channel || /.*/, Preach._q);
+Preach.prototype.subscribers = function(channel) {
+  var channels = util.getChannels(channel || /.*/, this._q);
   var curr;
   var result;
   result = {};
-  if (channels.length === 1 && !(channels[0] in Preach._q)) return result;
+  if (channels.length === 1 && !(channels[0] in this._q)) return result;
   for (var i in channels) {
     curr = channels[i];
     result[curr] = [];
-    for (var k in Preach._q[curr]) {
-      if (Preach._q[curr].hasOwnProperty(k)) {
-        result[curr].push(Preach._q[curr][k]);
+    for (var k in this._q[curr]) {
+      if (this._q[curr].hasOwnProperty(k)) {
+        result[curr].push(this._q[curr][k]);
       }
     }
   }
   return result;
 };
 
-Preach.subscriberCount = function(channel) {
-  var channels = util.getChannels(channel || /.*/, Preach._q);
+Preach.prototype.subscriberCount = function(channel) {
+  var channels = util.getChannels(channel || /.*/, this._q);
   var curr;
   var result;
   result = {};
-  if (channels.length === 1 && !(channels[0] in Preach._q)) return result;
+  if (channels.length === 1 && !(channels[0] in this._q)) return result;
   for (var i in channels) {
     curr = channels[i];
-    result[curr] = EventEmitter.listenerCount(emitter, curr);
+    result[curr] = EventEmitter.listenerCount(this._e, curr);
   }
   return result;
 };
 
-Preach.setMaxSubscribers = function(n) {
-  emitter.setMaxListeners(n);
+Preach.prototype.setMaxSubscribers = function(n) {
+  this._e.setMaxListeners(n);
 };
 
 module.exports = Preach;
