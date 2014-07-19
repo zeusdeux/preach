@@ -1,6 +1,6 @@
 {
   "name": "preach",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Lightweight pubsub utility for node and the browser",
   "main": "index.js",
   "keywords": [
@@ -17,5 +17,22 @@
     "should": "^4.0.4",
     "sinon": "^1.10.3",
     "uglify-js": "^2.4.15"
-  }
+  },
+  "directories": {
+    "test": "test"
+  },
+  "dependencies": {
+    "should": "^4.0.4",
+    "browserify": "^4.2.1",
+    "sinon": "^1.10.3",
+    "uglify-js": "^2.4.15"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/zeusdeux/preach.git"
+  },
+  "bugs": {
+    "url": "https://github.com/zeusdeux/preach/issues"
+  },
+  "homepage": "https://github.com/zeusdeux/preach"
 }
