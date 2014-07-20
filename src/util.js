@@ -11,7 +11,7 @@ exports.getChannels = function(expr, obj) {
   }
   else {
     //expr is the channel name itself
-    channels = [expr];
+    channels = expr in obj ? [expr] : [];
   }
   return channels;
 };

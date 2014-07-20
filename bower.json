@@ -1,7 +1,7 @@
 {
   "name": "preach",
   "main": "index.js",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "homepage": "https://github.com/zeusdeux/preach",
   "authors": [
     "Mudit Ameta <zeusdeux@gmail.com>"

@@ -17,7 +17,7 @@ function Preach(n) {
 Preach.prototype.pub = function(channel) {
   var channels = util.getChannels(channel, this._q);
   var data     = [].splice.call(arguments, 1);
-  if (!channels.length || (channels.length === 1 && !(channels[0] in this._q))) throw new Error(errors.ECHNLNOTFOUND);
+  if (!channels.length) throw new Error(errors.ECHNLNOTFOUND);
   for (var i in channels) {
     this._e.emit.apply(this._e, [channels[i]].concat(data));
   }
@@ -25,7 +25,7 @@ Preach.prototype.pub = function(channel) {
 };
 
 Preach.prototype.sub = function(channel, fn) {
-  var channels = util.getChannels(channel, this._q);
+  var channels = channel instanceof RegExp ? util.getChannels(channel, this._q) : [channel];
   var fnIndex  = util.getFnIdx(fn);
   var curr;
   if (!channels.length) throw new Error(errors.ECHNLNOTFOUND);
@@ -42,7 +42,7 @@ Preach.prototype.unsub = function(channel, fn) {
   var channels = util.getChannels(channel, this._q);
   var fnIndex  = util.getFnIdx(fn);
   var curr;
-  if (!channels.length || (channels.length === 1 && !(channels[0] in this._q))) throw new Error(errors.ECHNLNOTFOUND);
+  if (!channels.length) throw new Error(errors.ECHNLNOTFOUND);
   for (var i in channels) {
     try {
       curr = channels[i];
