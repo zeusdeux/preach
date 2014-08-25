@@ -71,7 +71,7 @@ var preach = new Preach;
 preach.pub('channel1');
 preach.pub('channel2', 1234);
 preach.pub('channel3', {a: 100}, 'test');
-preach.pub(/^channel.*/, null, {a: 'boop'}); //will publish data to all channels beginning with 'channel'
+preach.pub(/^channel.*/, 10, {a: 'boop'}); //will publish data to all channels beginning with 'channel'
 ```
 
 > ####Note:
