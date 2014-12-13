@@ -26,3 +26,9 @@ node_modules
 
 # ST
 *.sublime*
+
+# emacs
+TAGS
+\.tern-port
+\.tern-project
+/**/#.*

@@ -12,4 +12,6 @@ bundle:
 watch:
 	watchify index.js src/preach.js -o browser/preach.js
 build: test bundle min
-.PHONY: test min bundle build watch
+clean:
+	$(RM) ./browser/*
+.PHONY: test min bundle build watch clean
