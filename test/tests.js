@@ -41,8 +41,8 @@ describe('Preach', function() {
       });
     });
     describe('when you publish to a non-existant channel (using a string name)', function() {
-      it('should throw', function() {
-        preach.pub.bind(preach, '23424').should.throw();
+      it('should not throw', function() {
+        preach.pub.bind(preach, '23424').should.not.throw();
       });
     });
     describe('when you publish to channels using regex', function() {
@@ -63,8 +63,8 @@ describe('Preach', function() {
         });
       });
       describe('when there are no channels that match the regex', function() {
-        it('should throw', function() {
-          preach.pub.bind(preach, /t.*/).should.throw();
+        it('should not throw', function() {
+          preach.pub.bind(preach, /t.*/).should.not.throw();
         });
       });
     });
@@ -120,9 +120,9 @@ describe('Preach', function() {
         });
       });
       describe('when there are no channels that match the regex', function() {
-        it('should throw', function() {
+        it('should not throw', function() {
           var spy = function() {};
-          preach.sub.bind(preach, /t.*/, spy).should.throw();
+          preach.sub.bind(preach, /t.*/, spy).should.not.throw();
         });
       });
     });
@@ -149,12 +149,12 @@ describe('Preach', function() {
         preach.sub('test', function(d) {
           console.log(d);
         });
-        preach.unsub.bind(preach, 'test', function() {}).should.throw(errors.ELSTNRNOTFOUND);
+        preach.unsub.bind(preach, 'test', function() {}).should.not.throw(errors.ELSTNRNOTFOUND);
       });
     });
     describe('when you try to unsubscribe from a non-existant channel using a string channel name', function() {
       it('should throw', function() {
-        preach.unsub.bind(preach, 'adad', function() {}).should.throw(errors.ECHNLNOTFOUND);
+        preach.unsub.bind(preach, 'adad', function() {}).should.not.throw(errors.ECHNLNOTFOUND);
       });
     });
     describe('when functions unsubscribe using regex for channel', function() {
@@ -172,9 +172,9 @@ describe('Preach', function() {
         });
       });
       describe('when there are no channels that match the regex', function() {
-        it('should throw', function() {
+        it('should not throw', function() {
           var spy = function() {};
-          preach.unsub.bind(preach, /t.*/, spy).should.throw();
+          preach.unsub.bind(preach, /t.*/, spy).should.not.throw();
         });
       });
     });
@@ -185,8 +185,8 @@ describe('Preach', function() {
       preach.sub('test', spy);
       preach.sub('test2', spy);
       preach.purge();
-      preach.pub.bind(preach, 'test', 1234).should.throw();
-      preach.pub.bind(preach, /.*/, 1234).should.throw();
+      preach.pub.bind(preach, 'test', 1234).should.not.throw();
+      preach.pub.bind(preach, /.*/, 1234).should.not.throw();
       spy.callCount.should.be.exactly(0);
     });
   });
