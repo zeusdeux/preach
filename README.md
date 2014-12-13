@@ -2,7 +2,7 @@ preach
 ======
 [![Build Status](https://travis-ci.org/zeusdeux/preach.svg?branch=master)](https://travis-ci.org/zeusdeux/preach)
 
-Preach is a lightweight pubsub utility for node and the browser.   
+Preach is a lightweight pubsub utility for node and the browser.
 The browser version is ~2kb gzipped.
 
 ## Installation
@@ -21,13 +21,13 @@ bower install preach
 
 or
 
-```
+```javascript
 git clone git@github.com:zeusdeux/preach.git
 ```
 
-If you plan to use it with [browserify](http://browserify.org/), then just `require` `index.js`.   
+If you plan to use it with [browserify](http://browserify.org/), then just `require` `index.js`.
 If you plan to use it directly in the browser, then include `browser/preach.min.js`. This will export
-a global `require` function.   
+a global `require` function.
 You can then do:
 
 ```html
@@ -39,6 +39,8 @@ You can then do:
 
 ## Changelog
 
+- 0.3.0
+  - `Preach` is now a lot more forgiving (no more throws, yay!)
 - 0.2.0
   - `Preach` now exports a constructor when `require`-ed instead of a monolithic instance (incompatible change)
 - 0.1.0
@@ -74,9 +76,6 @@ preach.pub('channel3', {a: 100}, 'test');
 preach.pub(/^channel.*/, 10, {a: 'boop'}); //will publish data to all channels beginning with 'channel'
 ```
 
-> ####Note:
-> If a RegExp or String is passed as `channel` and there are no channels that match it, then `Preach` will `throw`.
-
 ## Preach.prototype.sub(channel, subscriber)
 
 This method is used to add a `subscriber` to `channel`.
@@ -85,6 +84,7 @@ This method takes the following parameters:
 
 - `channel`     : `String` channel name or a regular expression (`RegExp`)
 - `subscriber`  : A valid `Function`. This `Function` is called whenever data is published to the `channel`.
+
 A `subscriber` can subscribe to as many channels as required and even publish to any channel.
 
 > ####Note:
@@ -101,7 +101,6 @@ preach.sub(/^channel.*/, function(){
 ```
 
 > ####Note:
-> If a RegExp is passed as `channel` and there are no channels that match it, then `Preach` will `throw`.
 > If a String is passed as `channel` and there are no channels that match it, then a new `channel` will be created and `subscriber` will be subscribed to it.
 
 ## Preach.prototype.unsub(channel, subscriber)
@@ -125,9 +124,6 @@ preach.sub('test2', function(){}); //true
 preach.unsub(/.*/, function(){}); //true
                                   //function(){} is now unsubscribed from *all* channels
 ```
-
-> ####Note:
-> If a RegExp or String is passed as `channel` and there are no channels that match it, then `Preach` will `throw`.
 
 ## Preach.prototype.purge()
 
@@ -209,7 +205,7 @@ and *does not* `throw`.
 
 ## Preach.prototype.setMaxSubscribers(n)
 
-This sets the max listeners for each channel at `n`. Default is unlimited which is set by making `n` `zero`.   
+This sets the max listeners for each channel at `n`. Default is unlimited which is set by making `n` `zero`.
 This can also be set during `Preach` initialization.
 
 ```javascript
@@ -221,4 +217,3 @@ var preach = new Preach(10);
 
 > ####Note:
 > If `n` is lesser than `zero` then `Preach` will `throw`.
-
